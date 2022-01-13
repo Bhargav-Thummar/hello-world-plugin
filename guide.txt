@@ -1,0 +1,327 @@
+Create your own gem
+https://docs.google.com/document/d/1f8Qb9mf7P5fKKlqblfiIGvYGqSh3yUJy-8RN_y3a5Jo/edit
+
+Introduction
+
+Gems are simply open-source libraries that contain Ruby code and are packaged with a little extra data. Using a gem allows a programmer to use the code within the gem in their own program, without explicitly inserting that code.
+
+There are various ways to create a gem for rails applications. Before we continue, take a moment to decide if your new plugin will be shared across different Rails applications.
+
+If your plugin is specific to your application, your new plugin will be a vendor plugin.
+If you think your plugin may be used across applications, build it as a gamified plugin.
+For more information about these plugins click here.
+Creating and publishing your own gem is actually quite a simple and joyful task. Here in this blog, we will create a very simple gem and understand the requirements for building a gem and how to create your own gem from scratch. 
+
+So let’s start and create a gem ‘hello_world’, read more about the naming convention of the ruby gem.
+Create gem
+
+I started with one ruby file ‘hello_world.gemspec’ for my hello_world gem, and the gemspec. We will discuss more gemspec file later in this blog.
+
+Create a directory with the name ‘hello_world’.
+
+Inside of your ‘hello_world’ directory, create another directory with the name ‘lib’. The convention is to have one ruby file with the same name as your gem since that gets loaded when require ‘hello_world’ is run. That one file is in charge of setting up your gem’s code and API.
+
+Now create a file inside the lib folder with the same name as your gem. So in your case, it will be hello_world.rb.
+
+Finally, this will look like the below image.
+
+
+
+The code inside of lib/hello_world.rb is pretty essential. It just makes sure that you can see some output from the gem. Let’s make one class with the name of your gem and create a method that returns the ‘Hello World!’ string.
+
+Finally, this will look like the below.
+
+
+ 
+ # lib/hello_world.rb
+
+
+  class HelloWorld
+    def self.hey
+      puts "Hello world!"
+    end
+  end
+ 
+
+
+
+About .gemspec file
+
+Now create a file inside the main hello_world directory with a name the same as your gem and the extension of the file should be .gemspec. So in your case, the name of the file will be “hello_world.gemspec”
+
+
+
+The gemspec defines what is in the gem, who made it, and the version of the gem. It’s also your interface to RubyGems.org. All of the information you see on a gem page comes from the gemspec (i.e name, version, description, author, etc.).
+
+The gemspec is also a Ruby file, so you can wrap scripts to generate the file names and bump the version number. There are lots of fields the gemspec can contain. Click here for full reference.
+
+After creating a gemspec, you can build a gem from it.
+Your gemspec will look like the below.
+
+
+ 
+  # hello_world.gemspec
+
+  Gem::Specification.new do |spec|
+    spec.name        = 'hello_world'
+    spec.version     = '1.0.0'
+    spec.summary     = "Hello World!"
+    spec.description = "A simple hello world gem."
+    spec.authors     = ["Bhargav Thummar"]
+    spec.email       = ["bhargav@thummar.com"]
+    spec.files       = ["lib/hello_world.rb"]
+    spec.homepage    = 'https://rubygems.org/gems/hello_world'
+    spec.license     = 'MIT'
+  end
+
+
+NOTE: As per the above code, there is the specification for files on line no. 8, Here you have to mention each directory or file you create inside of the main directory. But you can also add files like the below image.
+
+
+  
+  # hello_world.gemspec
+ 
+  Gem::Specification.new do |spec|
+    spec.name        = 'hello_world'
+    spec.version     = '1.0.0'
+    spec.summary     = "Hello World!"
+    spec.description = "A simple hello world gem."
+    spec.authors     = ["Bhargav Thummar"]
+    
+    spec.email       = ["bhargav@thummar.com"]
+    # spec.files       = ["lib/hello_world.rb"]
+    spec.homepage    = 'https://rubygems.org/gems/hello_world'
+    spec.license     = 'MIT'
+ 
+    spec.files = Dir.chdir(File.expand_path(__dir__)) do
+      Dir["{lib}/**/*"]
+    end
+  end
+
+
+Run gem build hello_world.gemspec command. It will build a gem. But please make sure after every change in your gem code, you have to run this command to package a new build.
+If the build is successfully built, it will show below lines in the terminal.
+
+ 
+ Successfully built RubyGem
+ Name: hello_world
+ Version: 1.0.0
+ File: hello_world-1.0.0.gem
+ 
+
+	
+Now the final step is to install the gem and require the gem and then use it:
+Install a gem by running gem install hello_world -v 1.0.0
+
+ 
+ Successfully installed hello_world-1.0.0
+ Parsing documentation for hello_world-1.0.0
+ Installing ri documentation for hello_world-1.0.0
+ Done installing documentation for hello_world after 0 seconds
+ 1 gem installed
+ 
+
+
+Now run irb by running the command irb, if you haven’t installed irb else refer to this link.
+In irb shell require gem by running require ‘hello_world’ and call your method.
+
+
+
+Note: If you’re using an earlier ruby than 1.9.2, you need to start the session with irb -rubygems or require the rubygems library after you launch irb.
+
+
+
+Share with the ruby community
+
+Now you can share hello_world with the rest of the Ruby community. Publishing your gem out to RubyGems.org. It only has one command but you must have an account on the RubyGems.org site.
+
+To set up your computer with your RubyGems account, you can run the below command,
+
+curl -u qrush https://rubygems.org/api/v1/api_key.yaml >
+~/.gem/credentials; chmod 0600 ~/.gem/credentials
+
+
+NOTE: If you’re having problems with curl, OpenSSL, or certificates, you might want to simply try entering the above URL in your browser’s address bar. Your browser will ask you to log in to RubyGems.org. Enter your username and password. Your browser will now try to download the file api_key.yaml. Save it in ~/.gem and call it ‘credentials’
+
+Once this has been set up, you can push out the gem. In just a short time, You can see it on the RubyGems.org site or you can download it from any computer with RubyGems installed by running gem install hello_world -v 1.0.0
+
+
+Let’s require more files and add more code to your gem
+
+	Let’s write code to translate your statement into another language.
+	
+As we discussed before, the gem’s root file is in charge of loading the code for the gem. The other files for a gem are usually placed in a directory of the same name of the gem inside of lib. So let’s create a directory with the same name as your gem.
+
+
+Here I create a file with the name translator.rb and will add some inside of it.
+
+
+
+
+But before writing any code in translator.rb, you have added new files in hello_world.gemspec in files specification without this change, the new folder would not be included in the installed gem. you can add files in this manner.
+
+
+
+  spec.files       = ["lib/hello_world.rb",  "lib/hello_world/translator.rb"]
+ 
+
+But we do not have to add in this manner as we have already added the entire lib directory so, you can skip this part.
+
+Write method into your translator.rb to return statement in a specific language. And change your hello_world.rb ‘hey’ method according.
+
+
+Finally, the translator.rb file will be like…
+ 
+ 
+ # lib/hello_world/translator.rb
+  class Translator
+   def initialize(language)
+     @language = language
+   end
+ 
+   def hey
+     case @language
+     when "spanish"
+       "hola mundo!"
+     else
+       "hello world!"
+     end
+   end
+ end
+ 
+
+
+
+You have to require translator.rb inside of hello_world.rb. hello_world.rb will look be like…
+
+
+
+ 
+  # hello_world.rb
+
+
+  require 'hello_world/translator.rb'
+ 
+  class HelloWorld
+    def self.hey(language = "english")
+      translator = Translator.new(language)
+      translator.hey
+    end
+  end
+
+
+
+Let’s try this out. First, fire up irb.
+run irb -Ilib -rhello_world and check.
+
+
+ 
+ 001 > HelloWorld.hey
+ => "hello world!"
+ 002 > HelloWorld.hey(language = "spanish")
+ => "hola mundo!"
+ 
+
+We need to use a command flag here: -Ilib. Usually, RubyGems includes the lib directory for you, so end users don’t need to worry about configuring their load paths.
+
+Write test cases
+
+Testing a gem is one of the most important things. it helps to assure that your code works and it helps others know that your gem does its job. Gems support adding test files into the package so tests can be run when a gem is downloaded.
+
+There are many test frameworks for ruby as well i.e Minitest, Rspec, etc. here we will use Minitest built-in test framework for ruby.
+
+Let’s add some tests to Hello World. This requires adding a few more files, namely a Rakefile and a new test directory.
+Create Rakefile in your main directory. Rakefile gives you some simple automation for running tests.
+Create a test directory in your main directory. create file test_hello_world.rb and write methods inside the file.
+                       The file structure will look like this,
+
+
+
+
+
+Create a test directory in your main directory. create file test_hello_world.rb and write methods inside the file. But make sure you make entries of new folders in files specifications of hello_world.gemspec
+
+
+
+ spec.files = Dir.chdir(File.expand_path(__dir__)) do
+   Dir["{lib, test}/**/*"]
+ end
+
+
+
+
+Create a test directory in your main directory. create file test_hello_world.rb and write methods inside the file. But make sure you make entries of new folders in files specifications of hello_world.gemspec
+
+
+ 
+ # Rakefile
+ 
+ require 'rake/testtask'
+ 
+ Rake::TestTask.new do |t|
+   t.libs << 'test'
+ end
+ 
+ desc "Run tests"
+ task :default => :test
+
+
+        
+
+The test_hello_world.rb file looks like below
+
+
+ 
+ # test/test_hello_world.rb
+
+
+ require 'minitest/autorun'
+ require 'hello_world'
+ 
+ class HelloWorldTest < Minitest::Test
+   def test_english_hello_world
+     assert_equal "hello world!",
+     HelloWorld.hey("english")
+   end
+ 
+   def test_any_hello_world
+     assert_equal "hello world!",
+     HelloWorld.hey("ruby")
+   end
+ 
+   def test_spanish_hello_world
+     assert_equal "hola mundo!",
+     HelloWorld.hey("spanish")
+   end
+ end
+
+
+
+
+Finally, It is time to run the test.
+Run rake test
+If all the test cases run successfully you will get results like below
+	
+
+Run option: --seed 25931
+# Running:
+ 
+...
+ 
+Finished in 0.001016s, 2953.8142 runs/s, 2953.8142 assertions/s.
+3 runs, 3 assertions, 0 failures, 0 errors, 0 skips
+
+
+
+
+Summary
+The lib directory contains the code for the gem.
+gemspec specifies the information about a gem such as its name, version, description, authors, and homepage.
+The test or spec directory contains tests, depending on which test framework the developer uses (Minitest, Rspec)
+Rakefile, which the rake program uses to automate tests, generate code, and perform other tasks.
+
+Conclusion
+
+In this blog, we got a basic idea about the layout, a few important files (i.e .gemspec, Rakefile, etc), and their purpose.
+
+Click here to learn more about creating your own gem.
